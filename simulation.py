@@ -1,6 +1,6 @@
 #
 # This is where the fun stuff happens - simulating the boids
-# 
+#
 # This file includes Vector classes borrowed from Cocos2D
 #
 # This library is free software; you can redistribute it and/or modify it
