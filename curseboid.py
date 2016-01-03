@@ -52,7 +52,7 @@ class World(object):
         self.scr.refresh()
 
 
-sim = simulation.FlockSimulation(100, 700)
+sim = simulation.Simulation(100, 700)
 world = World(sim.swarm, 10)
 
 
