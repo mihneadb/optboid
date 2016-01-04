@@ -9,6 +9,8 @@ from leader import Leader
 from pyglet import *
 from pyglet.gl import *
 from math import *
+import time
+
 import simulation
 
 
@@ -21,11 +23,14 @@ class World(object):
     vertsGl = (GLfloat * len(verts))(*verts)
 
     def __init__(self, swarm, offx, offy):
+        self.start_time = time.time()
+
         self.swarm = swarm
         self.ents = swarm.boids  # this will point to a list of boids
         self.ent_size = 15.0
         self.num_ents = len(swarm.boids)
         self.fps = clock.ClockDisplay()
+        self.time = pyglet.text.Label('0', x=10, y=10, color=(80, 80, 80, 200), font_size=24)
         self.o_x = offx
         self.o_y = offy
 
@@ -69,9 +74,12 @@ class World(object):
         glClearColor(1.0, 1.0, 1.0, 0.0)
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
-        self.fps.draw()
+        # self.fps.draw()
 
-        #self.draw_grid()
+        self.time.text = str(time.time() - self.start_time)
+        self.time.draw()
+
+        self.draw_grid()
         for ent in self.ents:
             self.draw_entity(ent)
 
