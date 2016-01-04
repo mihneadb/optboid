@@ -106,4 +106,9 @@ clock.schedule(update)
 clock.schedule(idle)
 
 if __name__ == '__main__':
+    import random
+
+    # Deterministic randomness.
+    random.seed(42)
+
     pyglet.app.run()
