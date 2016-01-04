@@ -4,6 +4,7 @@ A simple pyglet engine to do some 2D rendering.
 Used to display boids at given positions
 """
 from __future__ import division, print_function, absolute_import, unicode_literals
+from leader import Leader
 
 from pyglet import *
 from pyglet.gl import *
@@ -33,8 +34,15 @@ class World(object):
         glLoadIdentity()
         glTranslatef(e.position.x + self.o_x, e.position.y + self.o_y, 0.0)
         glRotatef(e.rotation*180 / pi, 0, 0, 1)
-        glScalef(self.ent_size, self.ent_size, 1.0)
-        glColor4f(0, 0, 0, 0)
+
+        # Diff color for leaders.
+        if isinstance(e, Leader):
+            glScalef(2 * self.ent_size, 2 * self.ent_size, 1.0)
+            glColor4f(1, 0, 0, 0)
+        else:
+            glScalef(self.ent_size, self.ent_size, 1.0)
+            glColor4f(0, 0, 0, 0)
+
         glEnableClientState(GL_VERTEX_ARRAY)
         glVertexPointer(2, GL_FLOAT, 0, self.vertsGl)
         glDrawArrays(GL_TRIANGLES, 0, len(self.vertsGl) // 2)
