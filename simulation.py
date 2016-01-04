@@ -23,6 +23,7 @@ import random
 
 from boid import Boid
 from boid_swarm import BoidSwarm
+from leader import Leader
 
 
 class Simulation(object):
@@ -33,22 +34,31 @@ class Simulation(object):
     other. This class keeps the two separated
     """
 
-    def __init__(self, starting_units=100, field_size=800):
+    def __init__(self, starting_units=100, field_size=800, leaders=0):
         """
         """
         self.swarm = BoidSwarm(field_size+2*40, Boid.influence_range+5)  # /2
         self.field_size = field_size
         self.pad = 40  # use to keep boids inside the play field
 
-        for i in range(starting_units):
+        for _ in range(starting_units):
             b = Boid(random.uniform(100, 400),
                      random.uniform(100, 400))
             self.swarm.boids.append(b)
+
+        for _ in range(leaders):
+            leader = Leader(random.uniform(100, 400),
+                            random.uniform(100, 400))
+            self.swarm.boids.append(leader)
+
         self.swarm.rebuild()
         self._cumltime = 0  # calculation var
 
     def update(self, dt):
         """dt is in seconds"""
+
+        avg_speed = 0.0
+
         for b in self.swarm.boids:
             close_boids = self.swarm.find_near(b.position.x, b.position.y, b.influence_range)
             b.interact(close_boids)
@@ -56,6 +66,13 @@ class Simulation(object):
             w = self.field_size
             p = self.pad
             b.borders(p, w-p, p, w-p)  # keep the boids inside the borders
+
+            avg_speed += b.speed
+
+        avg_speed = avg_speed / len(self.swarm.boids)
+
+        leader = Leader(42, 42)
+        print("%s -- %s" % (avg_speed, leader.speed))
 
         # rebuild the swarm once we've updated all the positions
         self.swarm.rebuild()
